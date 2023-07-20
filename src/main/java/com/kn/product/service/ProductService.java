@@ -2,7 +2,7 @@
 package com.kn.product.service;
 import java.util.List;
 
-import com.kn.product.service.model.Product;
+import com.kn.product.model.Product;
 
 public interface ProductService {
 

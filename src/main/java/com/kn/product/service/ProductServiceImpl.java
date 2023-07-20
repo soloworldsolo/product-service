@@ -1,124 +1,92 @@
 package com.kn.product.service;
 
-import java.util.List;
-
+import com.kn.product.repository.ProductRepository;
+import com.kn.product.model.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kn.product.persistence.dao.impl.ProductDao;
-import com.kn.product.service.model.Product;
+import java.util.List;
 
 @Service("productService")
 @Transactional(propagation = Propagation.REQUIRED)
-public  class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService {
 
-	@Autowired
-	private Environment env;
 
-	@Autowired
-	private ProductDao productDao;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
+    private ProductRepository productRepository;
 
-	// @Autowired
-	// HttpHeaders headers;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
-	private static String url;
+    @Override
+    public List<Product> getProductId() {
+        return productRepository.findByRecordStatusIsNull();
+    }
 
-	// @Autowired(required = true)
-	private void init() {
-		// url = env.getProperty("prescriber.service.endpoint");
-		// headers.setContentType(MediaType.APPLICATION_JSON);
-		// headers.set
-	}
+    @Override
+    public void updateProductId(List<Product> product) {
 
-	@Override
-	public List<Product> getProductId() {
-		return productDao.getProductId();
-	}
+        productRepository.saveAll(product);
+    }
 
-	@Override
-	public void updateProductId(List<Product> product) {
-		productDao.updateProductId(product);
-	}
+    @Override
+    public Product findById(long id) {
+        return productRepository.findById(id).orElse(null);
+    }
 
-	@Override
-	public Product findById(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Product findByName(String name) {
+        return productRepository.findByProductName(name).orElse(null);
+    }
 
-	@Override
-	public Product findByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public void saveProduct(Product product) {
+        productRepository.save(product);
 
-	public void saveProduct(Product product) {
-		// TODO Auto-generated method stub
-		System.out.println(product.getProductName());
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			String jsonInString = mapper.writeValueAsString(product);
-			System.out.println(jsonInString);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    }
 
-		productDao.saveOrUpdate(product);
+    @Override
+    public void updateProduct(Product product) {
+        productRepository.save(product);
 
-	}
+    }
 
-	@Override
-	public void updateProduct(Product product) {
-		productDao.update(product);
+    @Override
+    public void softDeleteProduct(Product product) {
+        productRepository.deleteByEn(product.getEn());
 
-	}
+    }
 
-	@Override
-	public void softDeleteProduct(Product product) {
-		productDao.remove(product);
+    @Override
+    public void deleteProductById(long id) {
 
-	}
+        productRepository.deleteById(id);
 
-	@Override
-	public void deleteProductById(long id) {
-		// TODO Auto-generated method stub
+    }
 
-	}
+    @Override
 
-	@Override
+    public List<Product> findAllProduct() {
+        return productRepository.findAll();
+    }
 
-	public List<Product> findAllProduct() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public void deleteAllProduct() {
+        productRepository.deleteAll();
 
-	@Override
-	public void deleteAllProduct() {
-		// TODO Auto-generated method stub
+    }
 
-	}
+    @Override
+    public boolean isProductExist(Product product) {
+        return productRepository.existsById(product.getEn());
+    }
 
-	@Override
-	public boolean isProductExist(Product product) {
-		// TODO Auto-generated method stub
-		System.out.println("is emp");
-		return false;
-	}
-
-	@Override
-	public String size() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+    @Override
+    public String size() {
+        return productRepository.count() + "";
+    }
 }

@@ -5,7 +5,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.kn.product.service.model.Product;
+import com.kn.product.model.Product;
 
 
 @Component
