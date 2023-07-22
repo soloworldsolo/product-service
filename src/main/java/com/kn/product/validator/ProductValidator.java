@@ -1,4 +1,4 @@
-package com.kn.validator;
+package com.kn.product.validator;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

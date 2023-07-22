@@ -5,4 +5,4 @@
  * @author BOVINO MILK
  *
  */
-package com.kn.product.service.config;
+package com.kn.product.validator;

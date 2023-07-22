@@ -1,5 +1,7 @@
 package com.kn.product.service;
 
+import com.kn.product.exception.ProductException;
+import com.kn.product.exception.ProductNotFoundException;
 import com.kn.product.repository.ProductRepository;
 import com.kn.product.model.Product;
 import org.slf4j.Logger;
@@ -35,23 +37,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findById(long id) {
-        return productRepository.findById(id).orElse(null);
+    public Product findById(long id) throws ProductNotFoundException {
+
+        return productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
     }
 
     @Override
-    public Product findByName(String name) {
-        return productRepository.findByProductName(name).orElse(null);
+    public Product findByName(String name) throws ProductNotFoundException {
+
+        return productRepository.findByProductName(name).orElseThrow(ProductNotFoundException::new);
     }
 
-    public void saveProduct(Product product) {
-        productRepository.save(product);
+    public void saveProduct(Product product) throws ProductException {
+        try {
+            productRepository.save(product);
+        }catch (Exception e) {
+            throw new ProductException(e.getMessage(),e);
+        }
 
     }
 
     @Override
-    public void updateProduct(Product product) {
-        productRepository.save(product);
+    public void updateProduct(Product product) throws ProductException {
+        try {
+            productRepository.save(product);
+
+        }catch (Exception e) {
+           throw new ProductException(e.getMessage() ,e);
+        }
 
     }
 
